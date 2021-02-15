@@ -1,7 +1,10 @@
 ﻿using api.domain.Dtos.Usuario;
 using api.domain.Dtos.Usuario.Standard;
 using api.domain.Dtos.Validation;
+using api.domain.Entities;
+using api.domain.Interfaces.Repositories;
 using api.domain.Interfaces.Services;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,39 +15,59 @@ namespace api.services.Services
 {
     public class UsuariosServices : IUsuariosServices
     {
-        public Task<bool> Delete(Guid id)
+        private readonly IUsuariosRepository _repository;
+        private readonly IMapper _mapper;
+
+        public UsuariosServices(IUsuariosRepository repository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public Task<IEnumerable<UsuarioDto>> Get()
+        public async Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return await _repository.DeleteAsync(id);
         }
 
-        public Task<UsuarioDto> Get(Guid id)
+        public async Task<IEnumerable<UsuarioDto>> Get()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<IEnumerable<UsuarioDto>>(await _repository.SelectAsync());
         }
 
-        public Task<UsuarioDtoCreateResult> Post(UsuarioDtoCreate usuario)
+        public async Task<UsuarioDto> Get(Guid id)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<UsuarioDto>(await _repository.SelectAsync(id));
         }
 
-        public Task<UsuarioDtoUpdateResult> Put(UsuarioDtoUpdate usuario)
+        public async Task<UsuarioDtoCreateResult> Post(UsuarioDtoCreate usuario)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<UsuarioEntity>(usuario);
+            return _mapper.Map<UsuarioDtoCreateResult>(await _repository.InsertAsync(entity));
         }
 
-        public Task<DtoValidacao> Validation(UsuarioDtoValidation usuario)
+        public async Task<UsuarioDtoUpdateResult> Put(UsuarioDtoUpdate usuario)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<UsuarioEntity>(usuario);
+            return _mapper.Map<UsuarioDtoUpdateResult>(await _repository.UpdateAsync(entity));
         }
 
-        public Task<DtoValidacao> Validation(UsuarioDtoValidation usuario, Guid Id)
+        public async Task<DtoValidacao> Validation(UsuarioDtoValidation usuario, Guid id)
         {
-            throw new NotImplementedException();
+
+            var result = await _repository.SelectAsync(u => u.eMail.Equals(usuario.eMail));
+            var entity = result.FirstOrDefault();
+            var dtoValidacao = new DtoValidacao();
+            dtoValidacao.Sucesso = true;
+
+            if (entity != null && !entity.Id.Equals(id))
+            {
+                dtoValidacao.Sucesso = false;
+                dtoValidacao.Mensagem = "e-Mail já cadastrado";
+            }
+
+            return dtoValidacao;
         }
+
+       
     }
 }

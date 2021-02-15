@@ -13,10 +13,9 @@ namespace api.domain.Interfaces.Services
     {
         Task<IEnumerable<VotoDto>> Get();
         Task<VotoDto> Get(Guid id);
-        Task<VotoDtoCreateResult> Post(VotoDtoCreate voto);
-        Task<VotoDtoUpdateResult> Put(VotoDtoUpdate voto);
+        Task<VotoDtoCreateResult> IncluirVoto(VotoDtoCreate voto);
+        Task<IEnumerable<VotoDtoContagem>> ContarVotos();
         Task<bool> Delete(Guid id);
-        Task<DtoValidacao> Validation(VotoDtoValidation voto);
-        Task<DtoValidacao> Validation(VotoDtoValidation voto, Guid Id);
+        Task<DtoValidacao> Validation(VotoDtoValidation voto);        
     }
 }

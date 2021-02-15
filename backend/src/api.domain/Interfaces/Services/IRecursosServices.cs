@@ -16,7 +16,5 @@ namespace api.domain.Interfaces.Services
         Task<RecursoDtoCreateResult> Post(RecursoDtoCreate recurso);
         Task<RecursoDtoUpdateResult> Put(RecursoDtoUpdate recurso);
         Task<bool> Delete(Guid id);
-        Task<DtoValidacao> Validation(RecursoDtoValidation recurso);
-        Task<DtoValidacao> Validation(RecursoDtoValidation recurso, Guid Id);
     }
 }

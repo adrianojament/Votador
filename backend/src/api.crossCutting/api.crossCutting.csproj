@@ -5,16 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Class1.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\api.data\api.data.csproj" />
     <ProjectReference Include="..\api.Domain\api.domain.csproj" />
+    <ProjectReference Include="..\api.services\api.services.csproj" />    
   </ItemGroup>
 
 </Project>
