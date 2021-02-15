@@ -11,5 +11,6 @@ namespace api.domain.Dtos.Voto.Standard
         public RecursoDto Recurso { get; set; }
         public Guid UsuarioId { get; set; }
         public UsuarioDto Usuario { get; set; }
+        public string Comentario { get; set; }
     }
 }

@@ -8,7 +8,8 @@ namespace api.data.Repositories
     public class VotosRepository : BaseRepository<VotoEntity>, IVotosRepository
     {
         public VotosRepository(VotosContext context) : base(context)
-        {
+        {           
+            
             _dataset = context.Set<VotoEntity>();
         }
     }

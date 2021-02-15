@@ -1,7 +1,10 @@
 ﻿using api.domain.Dtos.Recurso;
 using api.domain.Dtos.Recurso.Standard;
 using api.domain.Dtos.Validation;
+using api.domain.Entities;
+using api.domain.Interfaces.Repositories;
 using api.domain.Interfaces.Services;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,39 +15,42 @@ namespace api.services.Services
 {
     public class RecursosServices : IRecursosServices
     {
-        public Task<bool> Delete(Guid id)
+        private readonly IRecursosRepository _repository;
+        private readonly IMapper _mapper;
+
+        public RecursosServices(IRecursosRepository repository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public Task<IEnumerable<RecursoDto>> Get()
+        public async Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return await _repository.DeleteAsync(id);
         }
 
-        public Task<RecursoDto> Get(Guid id)
+        public async Task<IEnumerable<RecursoDto>> Get()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<IEnumerable<RecursoDto>>(await _repository.SelectAsync());
         }
 
-        public Task<RecursoDtoCreateResult> Post(RecursoDtoCreate recurso)
+        public async Task<RecursoDto> Get(Guid id)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<RecursoDto>(await _repository.SelectAsync(id));
         }
 
-        public Task<RecursoDtoUpdateResult> Put(RecursoDtoUpdate recurso)
+        public async Task<RecursoDtoCreateResult> Post(RecursoDtoCreate recurso)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<RecursoEntity>(recurso);
+            var result = await _repository.InsertAsync(entity);
+            return _mapper.Map<RecursoDtoCreateResult>(result);
         }
 
-        public Task<DtoValidacao> Validation(RecursoDtoValidation recurso)
+        public async Task<RecursoDtoUpdateResult> Put(RecursoDtoUpdate recurso)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<DtoValidacao> Validation(RecursoDtoValidation recurso, Guid Id)
-        {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<RecursoEntity>(recurso);
+            var result = await _repository.UpdateAsync(entity);
+            return _mapper.Map<RecursoDtoUpdateResult>(result);
         }
     }
 }
