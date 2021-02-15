@@ -1,0 +1,7 @@
+--Renomear o arquivo para jsconfig.json, usar a opção de copiar sempre nas propriedades.
+
+{
+  "ConnectionStrings": {
+    "Database": "Informar a string de conexao"
+  }
+}
