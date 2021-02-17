@@ -8,9 +8,10 @@ namespace api.domain.Dtos.Voto
     {
         public Guid Id { get; set; }
         public Guid RecursoId { get; set; }
-        public RecursoDto Recurso { get; set; }
+        public RecursoDtoVoto Recurso { get; set; }
         public Guid UsuarioId { get; set; }
-        public UsuarioDto Usuario { get; set; }
+        public string Comentario { get; set; }
+        public UsuarioDtoVoto Usuario { get; set; }
         public DateTime CriadoEm { get; set; }
         public DateTime AtualizadoEm { get; set; }
     }

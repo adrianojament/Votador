@@ -11,6 +11,6 @@ namespace api.domain.Entities
         public string Senha { get => Helpers.Base64Decode(_Senha); set => _Senha = Helpers.Base64Encode(value); }
         public string eMail { get; set; }
         public string Nome { get; set; }
-        public IEnumerable<VotoEntity> Votos { get; set; }
+        public virtual IEnumerable<VotoEntity> Votos { get; set; }
     }
 }

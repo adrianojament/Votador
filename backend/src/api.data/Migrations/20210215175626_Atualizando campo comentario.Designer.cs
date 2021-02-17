@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using api.data.Context;
@@ -9,9 +10,10 @@ using api.data.Context;
 namespace api.data.Migrations
 {
     [DbContext(typeof(VotosContext))]
-    partial class VotosContextModelSnapshot : ModelSnapshot
+    [Migration("20210215175626_Atualizando campo comentario")]
+    partial class Atualizandocampocomentario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

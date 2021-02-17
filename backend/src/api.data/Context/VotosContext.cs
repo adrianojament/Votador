@@ -1,6 +1,7 @@
 ﻿using api.data.Mapping;
 using api.domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace api.data.Context
 {
@@ -13,12 +14,19 @@ namespace api.data.Context
         public VotosContext(DbContextOptions options) : base(options)
         {
             Database.Migrate();
+            
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            ConfigureMapContext.ConfigureMap(modelBuilder);
+            ConfigureMapContext.ConfigureMap(modelBuilder);                        
         }
     }
 }

@@ -12,7 +12,8 @@ namespace api.data.Mapping
             builder.UseXminAsConcurrencyToken();
 
             builder.HasKey(u => u.Id);
-            
+
+            builder.Property(u => u.Comentario).IsRequired().HasMaxLength(200);
             builder.HasOne(u => u.Usuario).WithMany(m => m.Votos);
             builder.HasOne(u => u.Recurso).WithMany(m => m.Votos);
         }
