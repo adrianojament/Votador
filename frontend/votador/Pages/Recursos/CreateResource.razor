@@ -9,15 +9,21 @@
 <EditForm Model="@novoRecurso" OnValidSubmit="@CriarRecurso">
     <DataAnnotationsValidator />
     <div class="form-group">
-        <div class="input-group">
-            <span class="input-group-text">Descrição</span>
-            <input type="text" aria-label="Descrição" class="form-control" @bind-value="@novoRecurso.Tarefa" />
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <input id="descricao" type="text" aria-label="Descrição" class="form-control" @bind-value="@novoRecurso.Tarefa" />
         </div>
         <ValidationMessage For="@(()=>novoRecurso.Tarefa)" />
     </div>
     <hr />
-    <button type="submit" class="btn btn-outline-success">Salvar</button>
-    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos"))">Voltar</button>
+    <button type="submit" class="btn btn-outline-success">
+        <span class="oi oi-circle-check" aria-hidden="true"></span>
+        Salvar
+    </button>
+    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos"))">
+        <span class="oi oi-circle-x" aria-hidden="true"></span>
+        Voltar
+    </button>
     @if (!string.IsNullOrEmpty(erro))
     {
         <hr />
@@ -33,10 +39,8 @@
     protected string erro = string.Empty;
 
     async Task CriarRecurso()
-    {
-        string urlApi = await Helppers.getUrlAPI(http);
-        erro = string.Empty;
-        var response = await http.PostAsJsonAsync<NovoRecurso>($"{urlApi}api/v1/Recursos", new NovoRecurso());
+    {        
+        var response = await http.PostAsJsonAsync<NovoRecurso>(await Helppers.getUrlAPI_Recursos(http), novoRecurso);
         if (response.IsSuccessStatusCode)
             navigation.NavigateTo("recursos");
         else

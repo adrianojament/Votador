@@ -1,23 +1,22 @@
-﻿@page "/recursos"
+﻿@page "/usuarios"
 @inject HttpClient http
-@inject NavigationManager navigation
 
-<h3>Cadastro de Recursos</h3>
+<h3>Cadastro de Usuários</h3>
 <hr />
 <p>
-    <a class="btn btn-success" href="/recursos/create">
+    <a class="btn btn-success" href="/usuarios/create">
         <span class="oi oi-plus" aria-hidden="true"></span>
         Adicionar
     </a>
 </p>
 
-@if (Recursos == null)
+@if (Usuarios == null)
 {
     <p><em>Carregando...</em></p>
 }
-else if (Recursos.Length == 0)
+else if (Usuarios.Length == 0)
 {
-    <p><em>Não existem recursos cadastradas.</em></p>
+    <p><em>Não existem usuários cadastradas.</em></p>
 }
 else
 {
@@ -26,17 +25,18 @@ else
             <thead>
                 <tr>
                     <td scope="col">Ações</td>
-                    <td scope="col">Tarefa</td>
+                    <td scope="col">Nome</td>
+                    <td scope="col">e-Mail</td>
                     <td scope="col">Atualizado em</td>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Recursos)
+                @foreach (var item in Usuarios)
                 {
                     <tr>
                         <td scope="row">
                             <div class="btn-group mb-3">
-                                <button type="button" @onclick="@(() => navigation.NavigateTo($"recursos/edit/{item.Id}"))" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alterar">
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alterar">
                                     <span class="oi oi-pencil" aria-hidden="true"></span>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Excluir">
@@ -44,8 +44,9 @@ else
                                 </button>
                             </div>
                         </td>
-                        <td>@item.Tarefa</td>
-                        <td>@item.AtualizadoEm</td>
+                        <td>@item.Nome</td>
+                        <td>@item.eMail</td>
+                        <td>@item.atualizadoEm</td>
                     </tr>
                 }
             </tbody>
@@ -54,19 +55,16 @@ else
 }
 
 @code {
-    public Recurso[] Recursos { get; set; }
-
+    public Usuario[] Usuarios { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await CarregarCategorias();
-
+        await CarregarUsuarios();
     }
 
-    private async Task CarregarCategorias()
+    async Task CarregarUsuarios()
     {
-        Recursos = await http.GetFromJsonAsync<Recurso[]>(await Helppers.getUrlAPI_Recursos(http));
-
+        Usuarios = await http.GetFromJsonAsync<Usuario[]>(await Helppers.getUrlAPI_Usuarios(http));
     }
 
 }

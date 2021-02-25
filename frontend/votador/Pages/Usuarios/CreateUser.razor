@@ -1,0 +1,68 @@
+﻿@page "/usuarios/create"
+@inject HttpClient http
+@inject NavigationManager navigation
+
+<h3>Cadastro de Usuários</h3>
+<hr />
+
+<EditForm Model="@novoUsuario" OnValidSubmit="@CriarUsuario">
+    <DataAnnotationsValidator />
+    <div class="form-group corpo">
+        <div class="mb-3">
+            <label for="Nome" class="form-label">Nome</label>
+            <input id="Nome" type="text" aria-label="Nome" class="form-control" @bind-value="@novoUsuario.Nome" />
+        </div>
+        <ValidationMessage For="@(()=>novoUsuario.Nome)" />
+        <div class="mb-3">
+            <label for="email" class="form-label">e-Mail</label>
+            <input id="email" type="email" aria-label="e-Mail" class="form-control" @bind-value="@novoUsuario.eMail" />
+        </div>
+        <ValidationMessage For="@(()=>novoUsuario.eMail)" />
+        <div class="mb-3 flex-container">
+            <div class="senha">
+                <label for="senha" class="form-label">Senha</label>
+                <input id="senha" type="password" aria-label="Senha" class="form-control" @bind-value="@novoUsuario.Senha" />
+                <ValidationMessage For="@(()=>novoUsuario.Senha)" />
+            </div>
+            
+            <div class="senha">
+                <label for="confirmasenha" class="form-label">Confirma a senha</label>
+                <input id="confirmasenha" type="password" aria-label="Confirma a Senha" class="form-control" @bind-value="@novoUsuario.ConfirmaSenha" />
+                <ValidationMessage For="@(()=>novoUsuario.ConfirmaSenha)" />
+            </div>
+            
+        </div>
+    </div>
+
+    <hr />
+    <button type="submit" class="btn btn-outline-success">
+        <span class="oi oi-circle-check" aria-hidden="true"></span>
+        Salvar
+    </button>
+    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("usuarios"))">
+        <span class="oi oi-circle-x" aria-hidden="true"></span>
+        Voltar
+    </button>
+    @if (!string.IsNullOrEmpty(erro))
+    {
+        <hr />
+        <div class="alert alert-danger" role="alert">
+            @erro
+        </div>
+    }
+</EditForm>
+
+@code {
+    protected NovoUsuario novoUsuario = new NovoUsuario();
+    protected string erro = string.Empty;
+
+    async Task CriarUsuario()
+    {
+        var response = await http.PostAsJsonAsync<NovoUsuario>(await Helppers.getUrlAPI_Usuarios(http), novoUsuario);
+        if (response.IsSuccessStatusCode)
+            navigation.NavigateTo("usuarios");
+        else
+            erro = $"Um erro ocorreu: {Environment.NewLine}{await response.Content.ReadAsStringAsync()}{Environment.NewLine}.";
+    }
+
+}

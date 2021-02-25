@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -9,6 +9,7 @@
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="votador.styles.css" rel="stylesheet" />
+    <meta http-equiv="Blazor-Environment" content="Staging" />
 </head>
 
 <body>
@@ -20,6 +21,20 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        const environmentName = 'Staging';
+        Blazor.start({
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                // Adds a custom HTTP header to the outbound requests
+                // To retain the default integrity checking behavior, it's necessary to pass through the 'integrity' parameter
+                return fetch(defaultUri, {
+                    cache: 'no-cache',
+                    integrity: integrity,
+                    headers: { 'blazor-environment': environmentName }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
