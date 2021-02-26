@@ -1,4 +1,4 @@
-﻿@page "/recursos/edit/{recursoId}"
+﻿@page "/recursos/cadastro/edit/{recursoId}"
 @inject HttpClient http
 @inject NavigationManager navigation
 
@@ -20,7 +20,7 @@
         <span class="oi oi-circle-check" aria-hidden="true"></span>
         Salvar
     </button>
-    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos"))">
+    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos/cadastro"))">
         <span class="oi oi-circle-x" aria-hidden="true"></span>
         Voltar
     </button>
@@ -43,7 +43,7 @@
     protected string Url = string.Empty;
     protected bool desabilitar = false;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
         Url = $"{await Helppers.getUrlAPI_Recursos(http)}/{recursoId}";
         alteracaoRecurso = await http.GetFromJsonAsync<AlteracaoRecurso>(Url);
@@ -54,7 +54,7 @@
     {
         var response = await http.PutAsJsonAsync<AlteracaoRecurso>(Url, alteracaoRecurso);
         if (response.IsSuccessStatusCode)
-            navigation.NavigateTo("recursos");
+            navigation.NavigateTo("recursos/cadastro");
         else
             erro = $"Um erro ocorreu {Environment.NewLine}{await response.Content.ReadAsStringAsync()}{Environment.NewLine}. Por favor tente mais tarde.";
     }

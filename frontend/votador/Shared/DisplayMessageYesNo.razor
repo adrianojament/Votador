@@ -1,0 +1,22 @@
+﻿<div>
+    <hr />
+    <div class="row g-3">
+        <div class="col">
+            <h4>@Message</h4>
+        </div>
+    </div>
+    <hr />
+    <button @onclick="SubmitForm" class="btn btn-primary">Sim</button>
+    <button @onclick="Cancel" class="btn btn-secondary">Não</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter] public string Message { get; set; }
+
+    async Task SubmitForm() => await BlazoredModal.CloseAsync();
+    async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}

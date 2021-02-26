@@ -1,4 +1,4 @@
-﻿@page "/recursos/create"
+﻿@page "/recursos/cadastro/create"
 @inject HttpClient http
 @inject NavigationManager navigation
 
@@ -20,7 +20,7 @@
         <span class="oi oi-circle-check" aria-hidden="true"></span>
         Salvar
     </button>
-    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos"))">
+    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos/cadastro"))">
         <span class="oi oi-circle-x" aria-hidden="true"></span>
         Voltar
     </button>
@@ -42,7 +42,7 @@
     {        
         var response = await http.PostAsJsonAsync<NovoRecurso>(await Helppers.getUrlAPI_Recursos(http), novoRecurso);
         if (response.IsSuccessStatusCode)
-            navigation.NavigateTo("recursos");
+            navigation.NavigateTo("recursos/cadastro");
         else
             erro = $"Um erro ocorreu {Environment.NewLine}{await response.Content.ReadAsStringAsync()}{Environment.NewLine}. Por favor tente mais tarde.";
     }

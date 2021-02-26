@@ -1,0 +1,83 @@
+﻿@page "/usuarios/edit/{usuarioId}"
+@inject HttpClient http
+@inject NavigationManager navigation
+
+<h3>Alteração do Usuário</h3>
+<hr />
+
+<EditForm Model="@usuario" OnValidSubmit="@Gravar">
+    <DataAnnotationsValidator />
+    <div class="form-group corpo">
+        <div class="mb-3">
+            <label for="Nome" class="form-label">Nome</label>
+            <input id="Nome" type="text" aria-label="Nome" class="form-control" @bind-value="@usuario.Nome" />
+        </div>
+        <ValidationMessage For="@(()=>usuario.Nome)" />
+        <div class="mb-3">
+            <label for="email" class="form-label">e-Mail</label>
+            <input id="email" disabled type="email" aria-label="e-Mail" class="form-control" @bind-value="@usuario.eMail" />
+        </div>
+        <ValidationMessage For="@(()=>usuario.eMail)" />
+        <div class="mb-3 flex-container">
+            <div class="senha">
+                <label for="senha" class="form-label">Senha</label>
+                <input id="senha" type="password" aria-label="Senha" class="form-control" @bind-value="@usuario.Senha" />
+                <ValidationMessage For="@(()=>usuario.Senha)" />
+            </div>
+
+            <div class="senha">
+                <label for="confirmasenha" class="form-label">Confirma a senha</label>
+                <input id="confirmasenha" type="password" aria-label="Confirma a Senha" class="form-control" @bind-value="@usuario.ConfirmaSenha" />
+                <ValidationMessage For="@(()=>usuario.ConfirmaSenha)" />
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <button type="submit" class="btn btn-outline-success">
+        <span class="oi oi-circle-check" aria-hidden="true"></span>
+        Salvar
+    </button>
+    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("usuarios"))">
+        <span class="oi oi-circle-x" aria-hidden="true"></span>
+        Voltar
+    </button>
+    @if (!string.IsNullOrEmpty(erro))
+    {
+        <hr />
+        <div class="alert alert-danger" role="alert">
+            @erro
+        </div>
+    }
+</EditForm>
+
+@code {
+    [Parameter]
+    public string usuarioId { get; set; }
+
+    protected AlteracaoUsuario usuario = new AlteracaoUsuario();
+    protected string erro = string.Empty;
+    protected string url = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BuscarUsuario();
+    }
+
+    async Task BuscarUsuario()
+    {
+        url = $"{await Helppers.getUrlAPI_Usuarios(http)}/{usuarioId}";
+        usuario = await http.GetFromJsonAsync<AlteracaoUsuario>(url);
+        usuario.ConfirmaSenha = usuario.Senha;
+    }
+
+    async Task Gravar()
+    {
+        var response = await http.PutAsJsonAsync<AlteracaoUsuario>(url, usuario);
+        if (response.IsSuccessStatusCode)
+            navigation.NavigateTo("usuarios");
+        else
+            erro = $"Um erro ocorreu: {Environment.NewLine}{await response.Content.ReadAsStringAsync()}{Environment.NewLine}.";
+    }
+
+}
