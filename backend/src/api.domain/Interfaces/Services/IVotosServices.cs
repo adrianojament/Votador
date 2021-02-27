@@ -16,6 +16,6 @@ namespace api.domain.Interfaces.Services
         Task<VotoDtoCreateResult> IncluirVoto(VotoDtoCreate voto);
         Task<IEnumerable<VotoDtoContagem>> ContarVotos();
         Task<bool> Delete(Guid id);
-        Task<DtoValidacao> Validation(VotoDtoValidation voto);        
+        Task<DtoValidacao> ValidationInsert(VotoDtoRecepcao voto);        
     }
 }

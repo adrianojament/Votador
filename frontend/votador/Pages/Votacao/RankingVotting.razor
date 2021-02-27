@@ -1,0 +1,50 @@
+﻿@page "/recursos/maisvotados"
+@inject HttpClient http
+
+<h3>Recursos mais Votados</h3>
+
+@if (RankingVotos == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else if (RankingVotos.Length == 0)
+{
+    <p><em>Não existem votos computados.</em></p>
+}
+else
+{
+    <div class="table-responsive-sm">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td width="10%" scope="col">Votos</td>
+                    <td width="90%" scope="col">Tarefa</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in RankingVotos)
+                {
+                    <tr>
+                        <td width="10%">@item.Qtd</td>
+                        <td width="90%">@item.Tarefa</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    protected VotoContagem[] RankingVotos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Carregar();
+    }
+
+    private async Task Carregar()
+    {
+        string url = $"{await Helppers.getUrlAPI_Votacao(http)}/ContarVotos";
+        RankingVotos = await http.GetFromJsonAsync<VotoContagem[]>(url);
+    }
+}

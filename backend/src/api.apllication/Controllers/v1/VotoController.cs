@@ -1,4 +1,5 @@
-﻿using api.domain.Dtos.Voto;
+﻿using api.domain.Dtos.Validation;
+using api.domain.Dtos.Voto;
 using api.domain.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -67,7 +68,7 @@ namespace api.apllication.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]        
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Votar([FromBody] VotoDtoCreate votoDto)
+        public async Task<ActionResult> Votar([FromBody] VotoDtoRecepcao votoDto)
         {
             if (!ModelState.IsValid)
             {
@@ -76,19 +77,20 @@ namespace api.apllication.Controllers.v1
 
             try
             {
-                var result = await _service.Validation(votoDto);
+                var result = await _service.ValidationInsert(votoDto);
                 if (!result.Sucesso)
                 {
-                    return BadRequest(result.Mensagem);
+                    return BadRequest(result);
                 }
-
-                await _service.IncluirVoto(votoDto);
-
-                return Ok("Voto computado");
+                
+                return Ok(result);
             }
             catch (ArgumentException e)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+                var validacao = new DtoValidacao();
+                validacao.Sucesso = false;
+                validacao.Mensagem = e.Message;
+                return StatusCode((int)HttpStatusCode.InternalServerError, validacao);
             }
 
         }

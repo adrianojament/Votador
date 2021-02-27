@@ -1,0 +1,85 @@
+﻿<div class="votting">
+    <EditForm EditContext="@editContext" OnValidSubmit="@SubmitForm">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label for="idEmail" class="form-label">e-Mail</label>
+            <input type="email"
+                   class="form-control"
+                   id="idEmail"
+                   placeholder="name@example.com"
+                   @bind="@voto.eMail" />
+            <ValidationMessage For="@(()=>voto.eMail)" />
+        </div>
+        <div class="mb-3">
+            <label for="senha" class="form-label">Senha</label>
+            <input id="senha"
+                   type="password"
+                   aria-label="Senha"
+                   class="form-control"
+                   @bind="@voto.Senha" />
+            <ValidationMessage For="@(()=>voto.Senha)" />
+        </div>
+        <div class="mb-3">
+            <label for="comentario" class="form-label">Comentário</label>
+            <textarea class="form-control" id="comentario" rows="3"
+                      @bind="@voto.Comentario" />
+            <ValidationMessage For="@(()=>voto.Comentario)" />
+        </div>
+        <hr />
+
+        <button @onclick="SubmitForm" class="btn btn-primary">Votar</button>
+        <button @onclick="Cancel" class="btn btn-secondary">Cancelar</button>
+
+        @if (!string.IsNullOrEmpty(erro))
+        {
+            <hr />
+            <div class="alert alert-danger" role="alert">
+                <p>@erro</p>                
+            </div>
+        }
+    </EditForm>
+</div>
+
+
+@code {
+    protected Voto voto = new Voto();
+    protected string erro = string.Empty;
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public HttpClient http { get; set; }
+    [Parameter] public Guid IdRecurso { get; set; }
+
+    private EditContext editContext;
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(voto);
+    }
+
+    async Task SubmitForm()
+    {
+        if (!editContext.Validate())
+            return;
+
+        voto.IdRecurso = IdRecurso;
+
+        string url = $"{await Helppers.getUrlAPI_Votacao(http)}/VotarItem";
+
+        var response = await http.PostAsJsonAsync<Voto>(url, voto);
+        if (response.IsSuccessStatusCode)
+        {
+            await BlazoredModal.CloseAsync();            
+
+        }
+        else
+        {
+            var validacao = await response.Content.ReadFromJsonAsync<Validacao>();
+            erro = $"Um erro ocorreu: {validacao.mensagem}";
+        }
+
+    }
+    async Task Cancel() => await BlazoredModal.CancelAsync();
+
+}

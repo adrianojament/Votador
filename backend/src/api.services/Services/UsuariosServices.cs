@@ -4,6 +4,7 @@ using api.domain.Dtos.Validation;
 using api.domain.Entities;
 using api.domain.Interfaces.Repositories;
 using api.domain.Interfaces.Services;
+using api.shared.Helpers;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,14 @@ namespace api.services.Services
             return _mapper.Map<UsuarioDto>(await _repository.SelectAsync(id));
         }
 
+        public async Task<UsuarioDto> GetUserEmail(string email)
+        {
+            var entityUser = await _repository.getEmail(email);
+            if (entityUser == null)
+                return null;
+            return _mapper.Map<UsuarioDto>(entityUser);
+        }
+
         public async Task<UsuarioDtoCreateResult> Post(UsuarioDtoCreate usuario)
         {
             var entity = _mapper.Map<UsuarioEntity>(usuario);
@@ -49,6 +58,28 @@ namespace api.services.Services
         {
             var entity = _mapper.Map<UsuarioEntity>(usuario);
             return _mapper.Map<UsuarioDtoUpdateResult>(await _repository.UpdateAsync(entity));
+        }
+
+        public async Task<DtoValidacao> ValidateEmailPassword(string email, string password)
+        {
+            var dtoValidacao = new DtoValidacao();
+            dtoValidacao.Sucesso = true;
+            var entityUsers = await _repository.getEmail(email);
+            if (entityUsers == null)
+            {
+                dtoValidacao.Sucesso = false;
+                dtoValidacao.Mensagem = "e-Mail não encontrado";
+                return dtoValidacao;
+            }
+
+            if (!entityUsers.Senha.Equals(password))
+            {
+                dtoValidacao.Sucesso = false;
+                dtoValidacao.Mensagem = "Senha Inválida";
+                return dtoValidacao;
+            }
+
+            return dtoValidacao;
         }
 
         public async Task<DtoValidacao> Validation(UsuarioDtoValidation usuario, Guid id)

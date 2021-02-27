@@ -17,15 +17,15 @@ namespace api.services.Services
     {
         private readonly IVotosRepository _repository;
         private readonly IMapper _mapper;
-        private readonly IUsuariosRepository _usuariosRepository;
-        private readonly IRecursosRepository _recursosRepository;
-        
-        public VotosServices(IVotosRepository repository, IMapper mapper, IUsuariosRepository usuariosRepository, IRecursosRepository recursosRepository)
+        private readonly IUsuariosServices _usuariosService;
+        private readonly IRecursosServices _recursosService;
+
+        public VotosServices(IVotosRepository repository, IMapper mapper, IUsuariosServices usuariosService, IRecursosServices recursosService)
         {
             _repository = repository;
             _mapper = mapper;
-            _usuariosRepository = usuariosRepository;
-            _recursosRepository = recursosRepository;
+            _usuariosService = usuariosService;
+            _recursosService = recursosService;
         }
 
         public async Task<IEnumerable<VotoDtoContagem>> ContarVotos()
@@ -35,13 +35,13 @@ namespace api.services.Services
 
             foreach (VotoDto item in votos)
             {
-                var result = contagem.Where(v => v.Id.Equals(item.RecursoId)).FirstOrDefault();
+                var result = contagem.Where(v => v.IdRecurso.Equals(item.RecursoId)).FirstOrDefault();
 
                 if (result == null)
                 {
                     contagem.Add(new VotoDtoContagem()
                     {
-                        Id = item.Id,
+                        IdRecurso = item.RecursoId,
                         Tarefa = item.Recurso.Tarefa,
                         Qtd = 1
                     }); 
@@ -51,6 +51,7 @@ namespace api.services.Services
                     result.Qtd++;
                 }
             }
+            contagem.OrderByDescending(x => x.Qtd);
 
             return contagem;
         }
@@ -76,31 +77,60 @@ namespace api.services.Services
             var result = await _repository.InsertAsync(entity);
             return _mapper.Map<VotoDtoCreateResult>(result);
         }
-
         
-
-        public async Task<DtoValidacao> Validation(VotoDtoValidation voto)
+        public async Task<DtoValidacao> ValidationInsert(VotoDtoRecepcao voto)
         {
-            StringBuilder erros = new StringBuilder();
-            if (!await _recursosRepository.ExistAsync(voto.RecursoId))
-                erros.AppendLine("Recurso não foi encontrado");
+            var validacao = new DtoValidacao();
+            validacao.Sucesso = true;
 
-            if (!await _usuariosRepository.ExistAsync(voto.UsuarioId))
-                erros.AppendLine("Usuario não foi encontrado");
-            else
+            if (string.IsNullOrEmpty(voto.Comentario))
             {
-                var result = await _repository.SelectAsync(v => v.UsuarioId.Equals(voto.UsuarioId) && v.RecursoId.Equals(voto.RecursoId));
-                if (result.Count() > 0)
-                {
-                    erros.AppendLine("Usuario já votou nesse recurso.");
-                }
+                validacao.Sucesso = false;
+                validacao.Mensagem = "Não foi realizado o comentário";
+                return validacao;
             }
 
-            var validacao = new DtoValidacao()
+            var entityRecurso = await _recursosService.Get(voto.IdRecurso);
+            if (entityRecurso == null)
             {
-                Mensagem = erros.ToString(),
-                Sucesso = string.IsNullOrEmpty(erros.ToString())
-            } ;
+                validacao.Sucesso = false;
+                validacao.Mensagem = "Recurso não foi encontrado";
+                return validacao;
+            }
+
+            var validacaoUser = await _usuariosService.ValidateEmailPassword(voto.eMail, voto.Senha);
+            if (!validacaoUser.Sucesso)
+            {
+                validacao.Sucesso = false;
+                validacao.Mensagem = validacaoUser.Mensagem;
+                return validacao;
+            }
+
+            var entityUsuario = await _usuariosService.GetUserEmail(voto.eMail);
+
+            var result = await _repository.SelectAsync(v => v.UsuarioId.Equals(entityUsuario.Id) && v.RecursoId.Equals(entityRecurso.Id));
+            if (result.Count() > 0)
+            {
+                validacao.Sucesso = false;
+                validacao.Mensagem = "Usuario já votou nesse recurso";
+                return validacao;
+            }
+
+            var votoCreate = new VotoDtoCreate();
+            votoCreate.Comentario = voto.Comentario;
+            votoCreate.UsuarioId = entityUsuario.Id;
+            votoCreate.RecursoId = entityRecurso.Id;
+
+            try
+            {
+                await IncluirVoto(votoCreate);
+            }
+            catch (Exception ex)
+            {
+                validacao.Sucesso = false;
+                validacao.Mensagem = ex.Message;
+            }
+            
             return validacao;
         }
     }

@@ -11,6 +11,7 @@ namespace votador.Helpers
         public string ApiUrl { get; set; }
         public string ApiUrlRecursos { get; set; }
         public string ApiUrlUsuarios { get; set; }
+        public string ApiUrlVotacao { get; set; }
 
     }
 }

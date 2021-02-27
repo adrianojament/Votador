@@ -14,3 +14,4 @@ namespace api.domain.Entities
         public virtual IEnumerable<VotoEntity> Votos { get; set; }
     }
 }
+    
