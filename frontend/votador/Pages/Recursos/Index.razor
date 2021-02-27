@@ -1,0 +1,83 @@
+﻿@page  "/recursos"
+@page  "/recursos/cadastro"
+@inject HttpClient http
+@inject NavigationManager navigation
+
+<h3>Cadastro de Recursos</h3>
+<hr />
+<p>
+    <a class="btn btn-success" href="/recursos/cadastro/create">
+        <span class="oi oi-plus" aria-hidden="true"></span>
+        Adicionar
+    </a>
+</p>
+
+@if (Recursos == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else if (Recursos.Length == 0)
+{
+    <p><em>Não existem recursos cadastradas.</em></p>
+}
+else
+{
+    <div class="table-responsive-sm">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td scope="col">Ações</td>
+                    <td scope="col">Tarefa</td>
+                    <td scope="col">Atualizado em</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Recursos)
+                {
+                    <tr>
+                        <td scope="row">
+                            <div class="btn-group mb-3">
+                                <button type="button" @onclick="@(() => navigation.NavigateTo($"recursos/cadastro/edit/{item.Id}"))" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alterar">
+                                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" @onclick="@(async () => await Remover(item.Id))" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Excluir">
+                                    <span class="oi oi-trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </td>
+                        <td>@item.Tarefa</td>
+                        <td>@item.AtualizadoEm</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    public Recurso[] Recursos { get; set; }
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Carregar();
+
+    }
+
+    private async Task Carregar()
+    {
+        Recursos = await http.GetFromJsonAsync<Recurso[]>(await Helppers.getUrlAPI_Recursos(http));
+
+    }
+
+    private async Task Remover(Guid id)
+    {
+        if (await Helppers.ExibirMensagemSimNao(Modal, "Deseja excluir o recurso?") == SimNao.Sim)
+        {
+            await http.DeleteAsync(await Helppers.getUrlAPI_Recursos(http) + "/" + id.ToString());
+            await Carregar();
+        }
+
+    }
+}

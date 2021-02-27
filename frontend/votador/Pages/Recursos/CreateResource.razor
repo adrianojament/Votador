@@ -1,0 +1,49 @@
+﻿@page "/recursos/cadastro/create"
+@inject HttpClient http
+@inject NavigationManager navigation
+
+
+<h3>Cadastro de Recursos</h3>
+<hr />
+
+<EditForm Model="@novoRecurso" OnValidSubmit="@CriarRecurso">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <input id="descricao" type="text" aria-label="Descrição" class="form-control" @bind-value="@novoRecurso.Tarefa" />
+        </div>
+        <ValidationMessage For="@(()=>novoRecurso.Tarefa)" />
+    </div>
+    <hr />
+    <button type="submit" class="btn btn-outline-success">
+        <span class="oi oi-circle-check" aria-hidden="true"></span>
+        Salvar
+    </button>
+    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos/cadastro"))">
+        <span class="oi oi-circle-x" aria-hidden="true"></span>
+        Voltar
+    </button>
+    @if (!string.IsNullOrEmpty(erro))
+    {
+        <hr />
+        <div class="alert alert-danger" role="alert">
+            @erro
+        </div>
+    }
+</EditForm>
+
+
+@code {
+    protected NovoRecurso novoRecurso = new NovoRecurso();
+    protected string erro = string.Empty;
+
+    async Task CriarRecurso()
+    {        
+        var response = await http.PostAsJsonAsync<NovoRecurso>(await Helppers.getUrlAPI_Recursos(http), novoRecurso);
+        if (response.IsSuccessStatusCode)
+            navigation.NavigateTo("recursos/cadastro");
+        else
+            erro = $"Um erro ocorreu {Environment.NewLine}{await response.Content.ReadAsStringAsync()}{Environment.NewLine}. Por favor tente mais tarde.";
+    }
+}

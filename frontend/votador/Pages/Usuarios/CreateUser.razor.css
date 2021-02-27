@@ -1,0 +1,18 @@
+﻿corpo{
+    padding: 3px
+}
+
+.senha {
+    width: 100%;
+    padding: 2px;
+    margin-right: 0px;
+    margin-left: 0px;
+    display: flex;
+    flex-direction:column;
+}
+
+.flex-container {    
+    display: flex;
+    flex-direction: row;
+    width: 100%;    
+}

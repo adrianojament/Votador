@@ -1,0 +1,61 @@
+﻿@page "/recursos/cadastro/edit/{recursoId}"
+@inject HttpClient http
+@inject NavigationManager navigation
+
+
+<h3>Alteração do Recurso</h3>
+<hr />
+
+<EditForm Model="@alteracaoRecurso" OnValidSubmit="@AlterarRecurso">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <input id="descricao" type="text" aria-label="Descrição" class="form-control" @bind-value="@alteracaoRecurso.Tarefa" />
+        </div>
+        <ValidationMessage For="@(()=>alteracaoRecurso.Tarefa)" />
+    </div>
+    <hr />
+    <button type="submit" class="btn btn-outline-success">
+        <span class="oi oi-circle-check" aria-hidden="true"></span>
+        Salvar
+    </button>
+    <button class="btn btn-outline-warning" @onclick="@(() => navigation.NavigateTo("recursos/cadastro"))">
+        <span class="oi oi-circle-x" aria-hidden="true"></span>
+        Voltar
+    </button>
+    @if (!string.IsNullOrEmpty(erro))
+    {
+        <hr />
+        <div class="alert alert-danger" role="alert">
+            @erro
+        </div>
+    }
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public string recursoId { get; set; }
+
+    protected AlteracaoRecurso alteracaoRecurso = new AlteracaoRecurso();
+    protected string erro = string.Empty;
+    protected string Url = string.Empty;
+    protected bool desabilitar = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Url = $"{await Helppers.getUrlAPI_Recursos(http)}/{recursoId}";
+        alteracaoRecurso = await http.GetFromJsonAsync<AlteracaoRecurso>(Url);
+        desabilitar = true;
+    }
+
+    async Task AlterarRecurso()
+    {
+        var response = await http.PutAsJsonAsync<AlteracaoRecurso>(Url, alteracaoRecurso);
+        if (response.IsSuccessStatusCode)
+            navigation.NavigateTo("recursos/cadastro");
+        else
+            erro = $"Um erro ocorreu {Environment.NewLine}{await response.Content.ReadAsStringAsync()}{Environment.NewLine}. Por favor tente mais tarde.";
+    }
+}
