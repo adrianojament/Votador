@@ -1,0 +1,2 @@
+﻿* Configurar a string connection na classe BaseTest, para outro server do postgresql.
+* Para executar os testes, estar dentro da pasta api.data.test via prompt de comando e executar o comando dotnet test
