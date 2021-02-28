@@ -10,12 +10,9 @@ using System.Threading.Tasks;
 namespace api.domain.Interfaces.Services
 {
     public interface IVotosServices
-    {
-        Task<IEnumerable<VotoDto>> Get();
-        Task<VotoDto> Get(Guid id);
+    {        
         Task<VotoDtoCreateResult> IncluirVoto(VotoDtoCreate voto);
-        Task<IEnumerable<VotoDtoContagem>> ContarVotos();
-        Task<bool> Delete(Guid id);
-        Task<DtoValidacao> ValidationInsert(VotoDtoRecepcao voto);        
+        Task<IEnumerable<VotoDtoContagem>> ContarVotos();        
+        Task<DtoValidacao> ValidacaoEInserir(VotoDtoRecepcao voto);        
     }
 }

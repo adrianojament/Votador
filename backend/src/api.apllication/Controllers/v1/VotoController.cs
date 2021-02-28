@@ -21,28 +21,7 @@ namespace api.apllication.Controllers.v1
         {
             _service = service;
         }
-
-        [HttpGet("ListarVotos")]
-        [ProducesResponseType(typeof(VotoDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]        
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Get()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                return Ok(await _service.Get());
-            }
-            catch (ArgumentException e)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
-            }
-        }
-
+        
         [HttpGet("ContarVotos")]
         [ProducesResponseType(typeof(VotoDtoContagem), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,7 +56,7 @@ namespace api.apllication.Controllers.v1
 
             try
             {
-                var result = await _service.ValidationInsert(votoDto);
+                var result = await _service.ValidacaoEInserir(votoDto);
                 if (!result.Sucesso)
                 {
                     return BadRequest(result);

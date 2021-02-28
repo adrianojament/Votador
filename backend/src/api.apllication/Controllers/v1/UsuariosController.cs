@@ -88,7 +88,7 @@ namespace api.apllication.Controllers.v1
 
             try
             {
-                var validacao = await _service.Validation(dtoCreate, Guid.NewGuid());
+                var validacao = await _service.ValidationEmailsAlreadyExist(dtoCreate.eMail, Guid.NewGuid());
                 if (!validacao.Sucesso)
                 {
                     return StatusCode((int)HttpStatusCode.Found, validacao.Mensagem);
@@ -135,7 +135,7 @@ namespace api.apllication.Controllers.v1
                     return StatusCode((int)HttpStatusCode.BadRequest, "Id informado diferente da requisição.");
                 }
 
-                var validaton = await _service.Validation(dtoUpdate, id);
+                var validaton = await _service.ValidationEmailsAlreadyExist(dtoUpdate.eMail, id);
                 if (!validaton.Sucesso)
                 {
                     return StatusCode((int)HttpStatusCode.Found, validaton.Mensagem);

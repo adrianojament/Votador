@@ -19,7 +19,7 @@ namespace api.crossCutting.Mappings
         {
             CreateMap<VotoEntity, VotoDto>().ReverseMap();
             CreateMap<VotoEntity, VotoDtoCreate>().ReverseMap();
-            CreateMap<VotoEntity, VotoDtoUpdate>().ReverseMap();
+            CreateMap<VotoEntity, VotoDtoCreateResult>().ReverseMap();
         }
 
         private void _mappingRecursos()
@@ -27,7 +27,9 @@ namespace api.crossCutting.Mappings
             CreateMap<RecursoEntity, RecursoDto>().ReverseMap();
             CreateMap<RecursoEntity, RecursoDtoVoto>().ReverseMap();
             CreateMap<RecursoEntity, RecursoDtoCreate>().ReverseMap();
+            CreateMap<RecursoEntity, RecursoDtoCreateResult>().ReverseMap();
             CreateMap<RecursoEntity, RecursoDtoUpdate>().ReverseMap();
+            CreateMap<RecursoEntity, RecursoDtoUpdateResult>().ReverseMap();
         }
 
         private void _mappingUsuarios()
@@ -35,7 +37,9 @@ namespace api.crossCutting.Mappings
             CreateMap<UsuarioEntity, UsuarioDto>().ReverseMap();
             CreateMap<UsuarioEntity, UsuarioDtoVoto>().ReverseMap();
             CreateMap<UsuarioEntity, UsuarioDtoCreate>().ReverseMap();
+            CreateMap<UsuarioEntity, UsuarioDtoCreateResult>().ReverseMap();
             CreateMap<UsuarioEntity, UsuarioDtoUpdate>().ReverseMap();
+            CreateMap<UsuarioEntity, UsuarioDtoUpdateResult>().ReverseMap();
         }
     }
 }

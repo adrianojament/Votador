@@ -23,5 +23,10 @@ namespace api.shared.Helpers
             TimeZoneInfo horaBrasilia = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
             return TimeZoneInfo.ConvertTimeFromUtc(dateTime, horaBrasilia);
         }
+
+        public static string generatePassword()
+        {
+            return Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
+        }
     }
 }

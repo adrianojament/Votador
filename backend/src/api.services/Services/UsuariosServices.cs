@@ -82,10 +82,10 @@ namespace api.services.Services
             return dtoValidacao;
         }
 
-        public async Task<DtoValidacao> Validation(UsuarioDtoValidation usuario, Guid id)
+        public async Task<DtoValidacao> ValidationEmailsAlreadyExist(string email, Guid id)
         {
 
-            var result = await _repository.SelectAsync(u => u.eMail.Equals(usuario.eMail));
+            var result = await _repository.SelectAsync(u => u.eMail.Equals(email));
             var entity = result.FirstOrDefault();
             var dtoValidacao = new DtoValidacao();
             dtoValidacao.Sucesso = true;
@@ -97,8 +97,6 @@ namespace api.services.Services
             }
 
             return dtoValidacao;
-        }
-
-       
+        }       
     }
 }
