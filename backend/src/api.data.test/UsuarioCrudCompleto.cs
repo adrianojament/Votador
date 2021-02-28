@@ -1,6 +1,7 @@
 ﻿using api.data.Context;
 using api.data.Repositories;
 using api.domain.Entities;
+using api.shared.Helpers;
 using LanguageExt.UnitsOfMeasure;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -32,7 +33,7 @@ namespace api.data.test
                 {
                     eMail = Faker.Internet.Email(),
                     Nome = Faker.Name.FullName(),
-                    Senha = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)
+                    Senha = Helpers.generatePassword()
                 };
                 var newUsuario = await CriarUsuario(usuariosRepository, entity);
             

@@ -14,8 +14,7 @@ namespace api.crossCutting.DependencyInjection
         {
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new DtoToEntityProfile());
-                cfg.AddProfile(new EntityToDtoProfile());
+                cfg.AddProfile(new DtoToEntityProfile());                
             });
 
             var mapper = config.CreateMapper();

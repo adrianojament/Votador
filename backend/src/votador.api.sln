@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api.apllication", "api.apll
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api.data.test", "api.data.test\api.data.test.csproj", "{3D121CDB-5836-4B96-86B7-819C6138F9C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api.services.test", "api.services.test\api.services.test.csproj", "{D3CC5AB4-00E7-450F-A774-73E3BE68843F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,5 +116,17 @@ Global
 		{3D121CDB-5836-4B96-86B7-819C6138F9C1}.Release|x64.Build.0 = Release|Any CPU
 		{3D121CDB-5836-4B96-86B7-819C6138F9C1}.Release|x86.ActiveCfg = Release|Any CPU
 		{3D121CDB-5836-4B96-86B7-819C6138F9C1}.Release|x86.Build.0 = Release|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Debug|x64.Build.0 = Debug|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Debug|x86.Build.0 = Debug|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Release|x64.ActiveCfg = Release|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Release|x64.Build.0 = Release|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3CC5AB4-00E7-450F-A774-73E3BE68843F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

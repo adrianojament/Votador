@@ -16,7 +16,7 @@ namespace api.domain.Interfaces.Services
         Task<UsuarioDtoCreateResult> Post(UsuarioDtoCreate usuario);
         Task<UsuarioDtoUpdateResult> Put(UsuarioDtoUpdate usuario);
         Task<bool> Delete(Guid id);
-        Task<DtoValidacao> Validation(UsuarioDtoValidation usuario, Guid id);
+        Task<DtoValidacao> ValidationEmailsAlreadyExist(string email, Guid id);
         Task<DtoValidacao> ValidateEmailPassword(string email, string password);
         Task<UsuarioDto> GetUserEmail(string email);
 

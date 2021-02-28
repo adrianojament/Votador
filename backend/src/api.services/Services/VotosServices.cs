@@ -30,10 +30,10 @@ namespace api.services.Services
 
         public async Task<IEnumerable<VotoDtoContagem>> ContarVotos()
         {
-            var votos = await Get();
+            var votos = await _repository.SelectAsync();
             var contagem = new List<VotoDtoContagem>(); 
 
-            foreach (VotoDto item in votos)
+            foreach (VotoEntity item in votos)
             {
                 var result = contagem.Where(v => v.IdRecurso.Equals(item.RecursoId)).FirstOrDefault();
 
@@ -56,21 +56,6 @@ namespace api.services.Services
             return contagem;
         }
 
-        public async Task<bool> Delete(Guid id)
-        {
-            return await _repository.DeleteAsync(id);
-        }
-
-        public async Task<IEnumerable<VotoDto>> Get()
-        {
-            return _mapper.Map<IEnumerable<VotoDto>>(await _repository.SelectAsync());
-        }
-
-        public async Task<VotoDto> Get(Guid id)
-        {
-            return _mapper.Map<VotoDto>(await _repository.SelectAsync(id));
-        }
-
         public async Task<VotoDtoCreateResult> IncluirVoto(VotoDtoCreate voto)
         {
             var entity = _mapper.Map<VotoEntity>(voto);
@@ -78,7 +63,7 @@ namespace api.services.Services
             return _mapper.Map<VotoDtoCreateResult>(result);
         }
         
-        public async Task<DtoValidacao> ValidationInsert(VotoDtoRecepcao voto)
+        public async Task<DtoValidacao> ValidacaoEInserir(VotoDtoRecepcao voto)
         {
             var validacao = new DtoValidacao();
             validacao.Sucesso = true;
